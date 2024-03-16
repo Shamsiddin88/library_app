@@ -165,7 +165,52 @@ class _BookInfoState extends State<BookInfo> {
             child: Row(
               children: [
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    print("bosildi");
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Ogoxlantrish!!!',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20.w(),
+                              fontWeight: FontWeight.w900,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Text(
+                            'Ishonchingiz komilmi???',
+                            style: TextStyle(
+                              color: Colors.lightBlueAccent,
+                              fontSize: 18.w(),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          actions: <Widget>[
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment
+                                  .spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Yopish'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {},
+                                  child: Text('Davom'),
+                                ),
+                              ],
+                            )
+                          ],
+                        );
+                      },
+                    );
+                  },
                   borderRadius:BorderRadius.circular(20.w()),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 15.w(),vertical: 10.h()),
@@ -187,7 +232,9 @@ class _BookInfoState extends State<BookInfo> {
                 // SizedBox(width: 20.w(),),
                 Spacer(),
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+
+                  },
                   borderRadius:BorderRadius.circular(20.w()),
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 15.w(),vertical: 10.h()),
