@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_app/screens/book_info/book_info_screen.dart';
 import 'package:library_app/screens/books/widgets/book_widget.dart';
@@ -7,6 +8,13 @@ import 'package:library_app/utils/images/app_images.dart';
 import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/utils/styles/app_text_style.dart';
 import '../../utils/colors/app_colors.dart';
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/screens/books/add_book_screen.dart';
+import 'package:library_app/screens/books/book_info_screen.dart';
+import 'package:library_app/utils/project_extensions.dart';
+import 'package:library_app/view_models/book_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 
 class AllBooksScreen extends StatelessWidget {
@@ -20,7 +28,7 @@ class AllBooksScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           backgroundColor:  AppColors.c_29BB89,
         onPressed: () {  },
-        child: IconButton(onPressed: (){},icon: Icon(Icons.add),),
+        child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Icon(Icons.add),),
       ),
       backgroundColor: AppColors.c_F9F9F9,
       body: Column(
@@ -152,5 +160,10 @@ class AllBooksScreen extends StatelessWidget {
         ],
       ),
     );
+
   }
 }
+
+
+
+
