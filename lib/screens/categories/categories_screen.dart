@@ -6,10 +6,12 @@ import 'package:library_app/screens/categories/widget_items/categories_item.dart
 import 'package:library_app/utils/colors/app_colors.dart';
 import 'package:library_app/utils/images/app_images.dart';
 import 'package:library_app/utils/project_extensions.dart';
+import 'package:library_app/view_models/book_view_model.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key, required this.category});
-  final int category;
+  final Future category;
 
 
   @override
@@ -21,7 +23,10 @@ class CategoriesScreen extends StatelessWidget {
         title: const Center(
             child: Text("Kitob Turlari", textAlign: TextAlign.center)),
       ),
-      body: Expanded(
+      body: context.read<BookViewModel>().isLoading?
+
+      const Center(child: CircularProgressIndicator(),)
+          :Expanded(
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w()),
@@ -35,22 +40,29 @@ class CategoriesScreen extends StatelessWidget {
               crossAxisCount: 2,
               childAspectRatio: 0.6,
               children: [
-                // ...List.generate(
-                //   category.to,
-                //   (index) =>  InkWell(
-                //     onTap: (){
-                //       Navigator.push(context,MaterialPageRoute(builder: (context){
-                //         return const BookInfo();
-                //       }));
-                //     },
-                //     child: CategoriesItem(
-                //       image: category.map,
-                //       price: bookModel.price.toString(),
-                //       bookName: bookModel.bookName,
-                //       author: bookModel.author,
-                //     ),
-                //   )
-                // ),
+                ...List.generate(
+                    context.watch<BookViewModel>().allBooks.length,
+                  (index)
+                  {
+                    BookModel books=context.watch<BookViewModel>().allBooks[index];
+                    return
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return BookInfo(
+                                        bookModel: books,
+                                      );
+                                    }));
+                                  },
+                                  child: CategoriesItem(
+                                    image: books.imageUrl,
+                                    price: books.price.toString(),
+                                    bookName: books.bookName,
+                                    author: books.author,
+                                  ),
+                                );
+                              }),
               ],
             ),
           ),

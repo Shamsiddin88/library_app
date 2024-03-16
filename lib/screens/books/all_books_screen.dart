@@ -5,17 +5,13 @@ import 'package:library_app/screens/book_info/book_info_screen.dart';
 import 'package:library_app/screens/books/widgets/book_widget.dart';
 import 'package:library_app/screens/books/widgets/wrap_item.dart';
 import 'package:library_app/screens/categories/categories_screen.dart';
-import 'package:library_app/utils/images/app_images.dart';
 import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/utils/styles/app_text_style.dart';
 import '../../utils/colors/app_colors.dart';
 import 'package:library_app/data/models/book_model.dart';
 import 'package:library_app/screens/books/add_book_screen.dart';
-import 'package:library_app/screens/books/book_info_screen.dart';
-import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/view_models/book_view_model.dart';
 import 'package:provider/provider.dart';
-import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 
 class AllBooksScreen extends StatelessWidget {
@@ -100,18 +96,14 @@ class AllBooksScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.h()),
             child: Wrap(
-              spacing: 11, // qatlar orasidagi bo'sh joy
-              // qatlar orasidagi bo'sh joy
+              spacing: 11,
               children: <Widget>[
                 ...List.generate(
                     categories.length,
                     (index) => WrapItem(
                           title: categories[index],
                           onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return CategoriesScreen(category: index+1);
-                            }));
+                            category: context.read<BookViewModel>().getBooksByCategoryId(index+1);
                           },
                         )),
               ],
