@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:library_app/utils/images/app_images.dart';
+
 import 'package:library_app/utils/project_extensions.dart';
 class BookItem extends StatelessWidget {
   const BookItem({super.key, required this.image,  required this.price, required this.bookName, required this.author});
@@ -27,13 +27,13 @@ class BookItem extends StatelessWidget {
                 horizontal: 10.w(), vertical: 10.h()),
             child: SizedBox(
                 height: 165.h(),
-                width: 130.w(),
+                width: 145.w(),
                 child: ClipRRect(
                   borderRadius:
                   BorderRadius.circular(20.w()),
-                  child: Image.asset(
-                    AppImages.book2,
-                    fit: BoxFit.fill,
+                  child: Image.network(
+                    "https://kitobxon.com/img_knigi/564.jpg",
+
                   ),
                 )),
           ),
@@ -70,7 +70,7 @@ class BookItem extends StatelessWidget {
             child:  Row(
               children: [
                 const Text(
-                  "\$ ",
+                  "SUM ",
                   style: TextStyle(
                       fontSize: 19,
                       color: Colors.blue),
