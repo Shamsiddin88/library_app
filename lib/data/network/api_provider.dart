@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter_nt_ten/data/models/my_response.dart';
-import 'package:flutter_nt_ten/data/models/book_model.dart';
-import 'package:flutter_nt_ten/utils/constants/app_constants.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/models/my_response.dart';
+import 'package:library_app/utils/constants/app_constant.dart';
 
 class ApiProvider {
   static Future<MyResponse> getAllBooks() async {

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_nt_ten/data/models/book_model.dart';
-import 'package:flutter_nt_ten/data/models/my_response.dart';
-import 'package:flutter_nt_ten/data/repositories/book_repo.dart';
+
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/models/my_response.dart';
+import 'package:library_app/data/repositories/book_repo.dart';
 
 class BookViewModel extends ChangeNotifier {
   List<BookModel> allBooks = [];

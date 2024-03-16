@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:library_app/screens/books/all_books_screen.dart';
 
-import 'package:provider/provider.dart';
+
 
 void main() {
 
-  runApp(MultiProvider(
-    providers: [
-      ],
-    child: MyApp(),
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
