@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_nt_ten/data/models/book_model.dart';
-import 'package:flutter_nt_ten/data/models/my_response.dart';
-import 'package:flutter_nt_ten/data/repositories/book_repo.dart';
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/models/my_response.dart';
+import 'package:library_app/data/repositories/book_repo.dart';
 
 class BookViewModel extends ChangeNotifier {
   List<BookModel> allBooks = [];
@@ -11,13 +11,12 @@ class BookViewModel extends ChangeNotifier {
 
   bool isLoading = false;
 
-  BookViewModel({required this.productRepo});
 
-  final BookRepo productRepo;
+  final BookRepo bookRepo;
 
   Future<void> getAllBooks() async {
     _notify(true);
-    MyResponse myResponse = await productRepo.getAllBooks();
+    MyResponse myResponse = await bookRepo.getAllBooks();
     _notify(false);
     if (myResponse.errorText.isEmpty) {
       allBooks = myResponse.data as List<BookModel>;
@@ -26,13 +25,17 @@ class BookViewModel extends ChangeNotifier {
     }
   }
 
+  BookViewModel({required this.bookRepo});
+
+
   Future<void> addBook(BookModel bookModel) async {
     _notify(true);
-    MyResponse myResponse = await productRepo.addBook(bookModel);
+    MyResponse myResponse = await bookRepo.addBook(bookModel);
     _notify(false);
 
     if (myResponse.errorText.isEmpty) {
       statusText = myResponse.data as String;
+      getAllBooks();
     } else {
       statusText = myResponse.errorText;
     }
@@ -40,11 +43,12 @@ class BookViewModel extends ChangeNotifier {
 
   Future<void> updateBook(BookModel bookModel) async {
     _notify(true);
-    MyResponse myResponse = await productRepo.updateBook(bookModel);
+    MyResponse myResponse = await bookRepo.updateBook(bookModel);
     _notify(false);
 
     if (myResponse.errorText.isEmpty) {
       statusText = myResponse.data as String;
+      getAllBooks();
     } else {
       statusText = myResponse.errorText;
     }
@@ -52,15 +56,29 @@ class BookViewModel extends ChangeNotifier {
 
   Future<void> deleteBook(String bookUUID) async {
     _notify(true);
-    MyResponse myResponse = await productRepo.deleteBook(bookUUID);
+    MyResponse myResponse = await bookRepo.deleteBook(bookUUID);
     _notify(false);
 
     if (myResponse.errorText.isEmpty) {
       statusText = myResponse.data as String;
+      getAllBooks();
     } else {
       statusText = myResponse.errorText;
     }
   }
+
+  Future<void> getBooksByCategoryId(int categoryId) async {
+    _notify(true);
+    MyResponse myResponse = await bookRepo.getBooksByCategoryId(categoryId);
+    _notify(false);
+    if (myResponse.errorText.isEmpty) {
+      allBooks = myResponse.data as List<BookModel>;
+    } else {
+      statusText = myResponse.errorText;
+    }
+  }
+
+
 
   _notify(bool value) {
     isLoading = value;

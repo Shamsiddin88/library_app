@@ -56,16 +56,52 @@ class BookModel {
       "_uuid": uuid,
     };
   }
+
+  static BookModel initialValue = BookModel(
+      description: "",
+      price: 0.0,
+      imageUrl: "",
+      uuid: "", 
+      bookName: "",
+      categoryId: 0,
+      rate: 0.0,
+      author: "",
+      );
+
+
+  BookModel copyWith({
+    String? bookName,
+    String? author,
+    String? description,
+    int? categoryId,
+    String? imageUrl,
+    double? price,
+    double? rate,
+    String? uuid,
+
+  }) {
+    return BookModel(
+        bookName: bookName ?? this.bookName,
+        author: author ?? this.author,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        price: price ?? this.price,
+        rate: rate ?? this.rate,
+        categoryId: categoryId ?? this.categoryId,
+        uuid: uuid ?? this.uuid,
+    );
+  }
+
+  bool canAddModel() {
+    if (bookName.isEmpty) return false;
+    if (author.isEmpty) return false;
+    if (description.isEmpty) return false;
+    if (imageUrl.isEmpty) return false;
+    if (price == 0) return false;
+    if (categoryId == 0) return false;
+    return true;
+  }
+
 }
 
-extension ColorExtension on String {
-  toColor() {
-    var hexColor = replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF$hexColor";
-    }
-    if (hexColor.length == 8) {
-      return Color(int.parse("0x$hexColor"));
-    }
-  }
-}
+//categorie 1-siyosat, 2-fantastika,  3-fan, 4-biografiya

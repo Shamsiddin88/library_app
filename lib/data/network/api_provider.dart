@@ -1,9 +1,9 @@
 import 'dart:convert';
-
-import 'package:flutter_nt_ten/data/models/my_response.dart';
-import 'package:flutter_nt_ten/data/models/book_model.dart';
-import 'package:flutter_nt_ten/utils/constants/app_constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/models/my_response.dart';
+
+import '../../utils/constants/app_constant.dart';
 
 class ApiProvider {
   static Future<MyResponse> getAllBooks() async {
@@ -24,6 +24,38 @@ class ApiProvider {
                   .toList() ??
               [],
         );
+      }
+      return MyResponse(errorText: response.statusCode.toString());
+    } catch (error) {
+      return MyResponse(errorText: error.toString());
+    }
+  }
+  static Future<MyResponse> getBooksByCategoryId(int categoryId) async {
+    Uri uri = Uri.https(
+      AppConstants.baseUrl,
+      "/api/v1/books",
+    );
+    try {
+      http.Response response = await http.get(
+        uri,
+        headers: {
+          "Authorization": "Bearer ${AppConstants.token}",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        List<BookModel> filteredBooks = [];
+        List<dynamic> booksJson = jsonDecode(response.body)["items"];
+
+        // Filter books by category ID
+        for (var bookJson in booksJson) {
+          if (bookJson["category_id"] == categoryId) {
+            filteredBooks.add(BookModel.fromJson(bookJson));
+          }
+        }
+
+        return MyResponse(data: filteredBooks);
       }
       return MyResponse(errorText: response.statusCode.toString());
     } catch (error) {
