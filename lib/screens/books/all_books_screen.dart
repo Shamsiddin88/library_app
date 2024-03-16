@@ -1,5 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:library_app/screens/book_info/book_info_screen.dart';
+import 'package:library_app/screens/books/widgets/book_widget.dart';
+import 'package:library_app/screens/books/widgets/wrap_item.dart';
+import 'package:library_app/screens/categories/categories_screen.dart';
+import 'package:library_app/utils/images/app_images.dart';
+import 'package:library_app/utils/project_extensions.dart';
+import 'package:library_app/utils/styles/app_text_style.dart';
+import '../../utils/colors/app_colors.dart';
 import 'package:library_app/data/models/book_model.dart';
 import 'package:library_app/screens/books/add_book_screen.dart';
 import 'package:library_app/screens/books/book_info_screen.dart';
@@ -14,47 +22,145 @@ class AllBooksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    width=MediaQuery.of(context).size.width;
-    height=MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: const Text("Books"),actions: [IconButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddBookScreen()));}, icon: Icon(Icons.add))],),
-      body:context.read<BookViewModel>().isLoading?
-
-      const Center(child: CircularProgressIndicator(),)
-          :ListView(children: [
-
-        ...List.generate(context.watch<BookViewModel>().allBooks.length, (index) {
-          BookModel books=context.watch<BookViewModel>().allBooks[index];
-
-          return ZoomTapAnimation(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>BookInfoScreen(bookModel: books)));},
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(books.author),
-
-
-
-                      ],),
-                  ),
-                  Expanded(child: CachedNetworkImage(imageUrl: books.imageUrl, height: 60,width: 100,))
-
-                ],
+      floatingActionButton: FloatingActionButton(
+          backgroundColor:  AppColors.c_29BB89,
+        onPressed: () {  },
+        child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Icon(Icons.add),),
+      ),
+      backgroundColor: AppColors.c_F9F9F9,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 30,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.h(), horizontal: 18.w()),
+            child: Text(
+              "Hush kelibsiz",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black.withOpacity(0.5),
               ),
             ),
-          );
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
+            child: Text("Ktoblar olamiga",
+                style:
+                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w()),
+            child: TextField(
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                fillColor: Colors.transparent,
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.all(7.0),
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.green,
+                  ),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                hintText: "Qidrish",
+                hintStyle: const TextStyle(color: Colors.black, fontSize: 14),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: AppColors.black),
+                    borderRadius: BorderRadius.circular(12)),
+                disabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.black.withOpacity(.6)),
+                    borderRadius: BorderRadius.circular(12)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.black.withOpacity(.6)),
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
+            child: Text("Ktob Turlari",
+                style:
+                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.h()),
+            child: Wrap(
+              spacing: 11, // qatlar orasidagi bo'sh joy
+              // qatlar orasidagi bo'sh joy
+              children: <Widget>[
+                ...List.generate(
+                    5,
+                    (index) => WrapItem(
+                          title: 'Tarixiy',
+                          voidCallback: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const CategoriesScreen();
+                            }));
+                          },
+                        )),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 5.h(),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
+            child: Text("Hamma Ktoblar",
+                style:
+                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w()),
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  padding: const EdgeInsets.all(25),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 15,
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  children: [
+                    ...List.generate(
+                        10,
+                        (index) => InkWell(
+                            borderRadius: BorderRadius.circular(20.w()),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return const BookInfo();
+                              }));
+                            },
+                            child: const BookItem(
+                              image: AppImages.book2,
+                              price: "2500",
+                              bookName: "O'tgan Kular",
+                              author: "Abdulla Qodri",
+                            )))
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
 
-
-        })
-      ],),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-      context.read<BookViewModel>().getAllBooks();
-    },child:Icon(Icons.add)),);
   }
 }
 
