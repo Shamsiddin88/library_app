@@ -1,13 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/repositories/book_repo.dart';
+import 'package:library_app/screens/books/update_book_screen.dart';
 import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/utils/styles/app_text_style.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:library_app/view_models/book_view_model.dart';
+import 'package:provider/provider.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/images/app_images.dart';
 class BookInfo extends StatefulWidget {
-  const BookInfo({super.key});
+  const BookInfo({super.key, required this.bookModel});
+
+  final BookModel bookModel;
 
   @override
   State<BookInfo> createState() => _BookInfoState();
@@ -16,11 +23,12 @@ class BookInfo extends StatefulWidget {
 class _BookInfoState extends State<BookInfo> {
   @override
   Widget build(BuildContext context) {
+    BookRepo bookRepo = BookRepo();
     return Scaffold(
       backgroundColor: AppColors.c_F9F9F9,
       appBar: AppBar(
         backgroundColor: AppColors.c_29BB89,
-        title: Center(child: Text("Ktob malumotlari",style: TextStyle(color: Colors.black),)),
+        title: Center(child: Text("Kitob malumotlari",style: TextStyle(color: Colors.black),)),
       ),
       body: Column(
         children: [
@@ -42,7 +50,7 @@ class _BookInfoState extends State<BookInfo> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20.w()),
                               child: Image.network(
-                                "https://kitobxon.com/img_knigi/564.jpg",
+                                widget.bookModel.imageUrl,
                                 fit: BoxFit.fill,
                               ),
                             )),
@@ -59,7 +67,7 @@ class _BookInfoState extends State<BookInfo> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                              child: const Text("Ktob Nomis",maxLines:1),
+                              child: const Text("Kitob Nomi",maxLines:1),
                             ),
                             SizedBox(
                               height: 5.h(),
@@ -69,7 +77,7 @@ class _BookInfoState extends State<BookInfo> {
             
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                                child: Text("O'tgan Kunlar",maxLines:1,style: AppTextStyle.rubikBold.copyWith(fontSize: 20,color: Colors.black),),
+                                child: Text(widget.bookModel.bookName,maxLines:1,style: AppTextStyle.rubikBold.copyWith(fontSize: 20,color: Colors.black),),
                               ),
                             ),
                             SizedBox(
@@ -77,7 +85,7 @@ class _BookInfoState extends State<BookInfo> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                              child: const Text("Mu'allif"),
+                              child: const Text("Muallif"),
                             ),
                             SizedBox(
                               height: 5.h(),
@@ -87,7 +95,7 @@ class _BookInfoState extends State<BookInfo> {
             
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                                child: Text("Abdulla Qodiri",style: AppTextStyle.rubikBold.copyWith(fontSize: 20,color: Colors.black),),
+                                child: Text(widget.bookModel.author,style: AppTextStyle.rubikBold.copyWith(fontSize: 20,color: Colors.black),),
                               ),
                             ),
                             SizedBox(
@@ -99,7 +107,7 @@ class _BookInfoState extends State<BookInfo> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Text(
                                     "SUM ",
@@ -107,7 +115,7 @@ class _BookInfoState extends State<BookInfo> {
                                         fontSize: 19, color: Colors.blue),
                                   ),
                                   Text(
-                                    "1865",
+                                    widget.bookModel.price.toString(),
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.black),
                                   ),
@@ -145,12 +153,12 @@ class _BookInfoState extends State<BookInfo> {
             
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                    child: const Text("Ktob haqida",),
+                    child: const Text("Kitob haqida",),
                   ),
                   SizedBox(height: 10.h(),),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                    child:  Text("ISBNdb gathers data from hundreds of libraries, publishers, merchants and other sources around the globe to compile a vast collection of unique book data searchable by ISBN, title, author, or publisher. Get a FREE 7 day trial and get access to the full database of 33 + million books and all data points including title, author, publisher, publish date, binding, pages, ISBNdb gathers data from hundreds of libraries, publishers, merchants and other sources around the globe to compile a vast collection of unique book data searchable by ISBN, title, author, or publisher. Get a FREE 7 day trial and get access to the full database of 33 + million books and all data points including title, author, publisher, publish date, binding, pages, lilist price, and more.",style: AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+                    child:  Text(widget.bookModel.description,style: AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
                   ),
             
                 ],
@@ -195,11 +203,15 @@ class _BookInfoState extends State<BookInfo> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Yopish'),
+                                  child: Text("Yo'q"),
                                 ),
                                 TextButton(
-                                  onPressed: () async {},
-                                  child: Text('Davom'),
+                                  onPressed: () async {
+                                    context.read<BookViewModel>().deleteBook(widget.bookModel.uuid);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Ha'),
                                 ),
                               ],
                             )
@@ -230,6 +242,7 @@ class _BookInfoState extends State<BookInfo> {
                 Spacer(),
                 InkWell(
                   onTap: (){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UpdateBookScreen(bookModel: widget.bookModel)));
 
                   },
                   borderRadius:BorderRadius.circular(20.w()),

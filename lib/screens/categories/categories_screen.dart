@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:library_app/data/models/book_model.dart';
+import 'package:library_app/data/repositories/category_repo.dart';
 import 'package:library_app/screens/book_info/book_info_screen.dart';
 import 'package:library_app/screens/categories/widget_items/categories_item.dart';
 import 'package:library_app/utils/colors/app_colors.dart';
@@ -6,7 +8,9 @@ import 'package:library_app/utils/images/app_images.dart';
 import 'package:library_app/utils/project_extensions.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  const CategoriesScreen({super.key, required this.category});
+  final int category;
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,7 @@ class CategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.c_29BB89,
         title: const Center(
-            child: Text("Kitob Trlari", textAlign: TextAlign.center)),
+            child: Text("Kitob Turlari", textAlign: TextAlign.center)),
       ),
       body: Expanded(
         child: SingleChildScrollView(
@@ -29,24 +33,24 @@ class CategoriesScreen extends StatelessWidget {
               mainAxisSpacing: 10,
               crossAxisSpacing: 15,
               crossAxisCount: 2,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.6,
               children: [
-                ...List.generate(
-                  10,
-                  (index) =>  InkWell(
-                    onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context){
-                        return const BookInfo();
-                      }));
-                    },
-                    child: const CategoriesItem(
-                      image: 'https://kitobxon.com/img_knigi/564.jpg',
-                      price: '2500',
-                      bookName: 'vaxt',
-                      author: 'Abdulla qodri',
-                    ),
-                  )
-                ),
+                // ...List.generate(
+                //   category.to,
+                //   (index) =>  InkWell(
+                //     onTap: (){
+                //       Navigator.push(context,MaterialPageRoute(builder: (context){
+                //         return const BookInfo();
+                //       }));
+                //     },
+                //     child: CategoriesItem(
+                //       image: category.map,
+                //       price: bookModel.price.toString(),
+                //       bookName: bookModel.bookName,
+                //       author: bookModel.author,
+                //     ),
+                //   )
+                // ),
               ],
             ),
           ),

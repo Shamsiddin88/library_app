@@ -26,7 +26,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Add product screen"),),
+    return Scaffold(appBar: AppBar(backgroundColor: AppColors.c_29BB89,title: Text("Add product screen"),),
     body: Padding(
       padding: const EdgeInsets.all(24),
       child: SingleChildScrollView(
@@ -193,7 +193,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
             TextButton(
                 style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.c_29BB89,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                 onPressed: ()async
                   {

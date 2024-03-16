@@ -38,7 +38,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
     TextEditingController(text: widget.bookModel.categoryId.toString());
 
 
-    return Scaffold(appBar: AppBar(title: Text("Kitob ma'lumotlarini o'zgartirish"),),
+    return Scaffold(appBar: AppBar(backgroundColor: AppColors.c_29BB89,title: Text("Kitob ma'lumotlarini o'zgartirish"),),
     body: Padding(
       padding: const EdgeInsets.all(24),
       child: SingleChildScrollView(
@@ -224,7 +224,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
             TextButton(
                 style: TextButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppColors.c_29BB89,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                 onPressed: ()async
                   {

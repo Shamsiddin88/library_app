@@ -1,8 +1,9 @@
-enum BookCategories {
-  fiction,
-  scienceFiction,
-  fantasy,
-  adventure,
-  horror,
-  historical,
-}
+
+  List<String> categories = [
+    "Siyosiy",
+    "Fantastika",
+    "Fan",
+    "Biografiya",
+    "Diniy"
+  ];
+

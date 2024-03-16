@@ -32,7 +32,7 @@ class BookItem extends StatelessWidget {
                   borderRadius:
                   BorderRadius.circular(20.w()),
                   child: Image.network(
-                    "https://kitobxon.com/img_knigi/564.jpg",
+                    image,
 
                   ),
                 )),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:library_app/data/repositories/category_repo.dart';
 import 'package:library_app/screens/book_info/book_info_screen.dart';
 import 'package:library_app/screens/books/widgets/book_widget.dart';
 import 'package:library_app/screens/books/widgets/wrap_item.dart';
@@ -31,7 +32,10 @@ class AllBooksScreen extends StatelessWidget {
         child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Icon(Icons.add),),
       ),
       backgroundColor: AppColors.c_F9F9F9,
-      body: Column(
+      body:context.read<BookViewModel>().isLoading?
+      const Center(child: CircularProgressIndicator(),)
+          :
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
@@ -49,7 +53,7 @@ class AllBooksScreen extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Ktoblar olamiga",
+            child: Text("Kitoblar olamiga",
                 style:
                     AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
           ),
@@ -89,7 +93,7 @@ class AllBooksScreen extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Ktob Turlari",
+            child: Text("Kitob Turlari",
                 style:
                     AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
           ),
@@ -100,13 +104,13 @@ class AllBooksScreen extends StatelessWidget {
               // qatlar orasidagi bo'sh joy
               children: <Widget>[
                 ...List.generate(
-                    5,
+                    categories.length,
                     (index) => WrapItem(
-                          title: 'Tarixiy',
-                          voidCallback: () {
+                          title: categories[index],
+                          onTap: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return const CategoriesScreen();
+                              return CategoriesScreen(category: index+1);
                             }));
                           },
                         )),
@@ -118,9 +122,15 @@ class AllBooksScreen extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Hamma Ktoblar",
-                style:
-                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Hamma Kitoblar",
+                    style:
+                        AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+                TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddBookScreen()));}, child: Text("+ Kitob qo'shish", style: AppTextStyle.rubikBold.copyWith(color: AppColors.c_29BB89),))
+              ],
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -134,24 +144,30 @@ class AllBooksScreen extends StatelessWidget {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 15,
                   crossAxisCount: 2,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.6,
                   children: [
                     ...List.generate(
-                        10,
-                        (index) => InkWell(
-                            borderRadius: BorderRadius.circular(20.w()),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const BookInfo();
-                              }));
-                            },
-                            child: const BookItem(
-                              image: AppImages.book2,
-                              price: "2500",
-                              bookName: "O'tgan Kular",
-                              author: "Abdulla Qodri",
-                            )))
+                        context.watch<BookViewModel>().allBooks.length,
+                        (index){
+                          BookModel books=context.watch<BookViewModel>().allBooks[index];
+                          return
+                                    InkWell(
+                                        borderRadius:
+                                            BorderRadius.circular(20.w()),
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return BookInfo(bookModel: books,);
+                                          }));
+                                        },
+                                        child: BookItem(
+                                          image: books.imageUrl,
+                                          price: books.price.toString(),
+                                          bookName: books.bookName,
+                                          author: books.author,
+                                        ));
+                                  })
                   ],
                 ),
               ),
