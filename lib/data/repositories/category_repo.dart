@@ -4,6 +4,6 @@
     "Fantastika",
     "Fan",
     "Biografiya",
-    "Diniy"
+    "Diniy",
   ];
 

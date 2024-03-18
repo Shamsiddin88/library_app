@@ -17,4 +17,8 @@ class BookRepo {
 
   Future<MyResponse> getBooksByCategoryId(int categoryId) =>
       ApiProvider.getBooksByCategoryId(categoryId);
+
+  Future<MyResponse> searchBooksByTitle(String title) =>
+      ApiProvider.searchBooksByTitle(title);
+
 }

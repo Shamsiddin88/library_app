@@ -241,7 +241,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
         
         
         
-                },child: Text("Update", style: AppTextStyle.rubikMedium.copyWith(color: AppColors.white),))
+                },child: Text("Saqlash", style: AppTextStyle.rubikMedium.copyWith(color: AppColors.white),))
         
         
           ],

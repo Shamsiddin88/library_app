@@ -28,7 +28,7 @@ class _BookInfoState extends State<BookInfo> {
       backgroundColor: AppColors.c_F9F9F9,
       appBar: AppBar(
         backgroundColor: AppColors.c_29BB89,
-        title: Center(child: Text("Kitob malumotlari",style: TextStyle(color: Colors.black),)),
+        title: Center(child: Text("Kitob ma'lumotlari",style: TextStyle(color: Colors.white),)),
       ),
       body: Column(
         children: [
@@ -50,7 +50,7 @@ class _BookInfoState extends State<BookInfo> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20.w()),
                               child: Image.network(
-                                widget.bookModel.imageUrl,
+                                widget.bookModel.imageUrl,height: 80,
                                 fit: BoxFit.fill,
                               ),
                             )),
@@ -67,7 +67,7 @@ class _BookInfoState extends State<BookInfo> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.w()),
-                              child: const Text("Kitob Nomi",maxLines:1),
+                              child: const Text("Kitob nomi",maxLines:1),
                             ),
                             SizedBox(
                               height: 5.h(),
@@ -129,9 +129,6 @@ class _BookInfoState extends State<BookInfo> {
                   ),
             
                   SizedBox(height: 15.h(),),
-            
-                  /**Manashu pekichni ishlatsak bolarkan**/
-            
                   Center(
                     child: RatingBar.builder(
                       initialRating: 3,
@@ -171,13 +168,12 @@ class _BookInfoState extends State<BookInfo> {
               children: [
                 InkWell(
                   onTap: (){
-                    print("bosildi");
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: Text(
-                            'Ogoxlantrish!!!',
+                            'Ogohlantrish!!!',
                             style: TextStyle(
                               color: Colors.red,
                               fontSize: 20.w(),
@@ -230,9 +226,9 @@ class _BookInfoState extends State<BookInfo> {
                     child: const Row(
                       children: [
                         Icon(Icons.delete,color: Colors.red,),
-                        Text(" O'Chirish",style: TextStyle(
+                        Text(" O'chirish",style: TextStyle(
                             fontSize: 20,
-                            color: Colors.red
+                            color: Colors.white
                         ),)
                       ],
                     ),
@@ -257,7 +253,7 @@ class _BookInfoState extends State<BookInfo> {
                         Icon(Icons.update, color: Colors.red,),
                         Text(" O'zgartrish",style: TextStyle(
                             fontSize: 20,
-                            color: Colors.red
+                            color: Colors.white
                         ),)
                       ],
                     ),

@@ -26,7 +26,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(backgroundColor: AppColors.c_29BB89,title: Text("Add product screen"),),
+    return Scaffold(appBar: AppBar(backgroundColor: AppColors.c_29BB89,title: Text("Kitob qo'shish"),),
     body: Padding(
       padding: const EdgeInsets.all(24),
       child: SingleChildScrollView(
@@ -211,7 +211,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
         
         
         
-                },child: Text("Add", style: AppTextStyle.rubikMedium.copyWith(color: AppColors.white),))
+                },child: Text("Saqlash", style: AppTextStyle.rubikMedium.copyWith(color: AppColors.white),))
         
         
           ],

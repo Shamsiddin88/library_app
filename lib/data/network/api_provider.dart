@@ -124,4 +124,39 @@ class ApiProvider {
       return MyResponse(errorText: error.toString());
     }
   }
+
+  static Future<MyResponse> searchBooksByTitle(String title) async {
+    Uri uri = Uri.https(
+      AppConstants.baseUrl,
+      "/api/v1/books",
+      {"title": title}, // Query parameter sifatida title ni uzatamiz
+    );
+    try {
+      http.Response response = await http.get(
+        uri,
+        headers: {
+          "Authorization": "Bearer ${AppConstants.token}",
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        List<BookModel> searchedBooks = [];
+        List<dynamic> booksJson = jsonDecode(response.body)["items"];
+
+        // Filter books by title
+        for (var bookJson in booksJson) {
+          if (bookJson["title"].toLowerCase().contains(title.toLowerCase())) {
+            searchedBooks.add(BookModel.fromJson(bookJson));
+          }
+        }
+
+        return MyResponse(data: searchedBooks);
+      }
+      return MyResponse(errorText: response.statusCode.toString());
+    } catch (error) {
+      return MyResponse(errorText: error.toString());
+    }
+  }
+
 }

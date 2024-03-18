@@ -21,14 +21,17 @@ class AllBooksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+    final bookViewModel = context.watch<BookViewModel>();
+    final allBooks = bookViewModel.allBooks;
+    List<BookModel> filteredBooks = allBooks;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
           backgroundColor:  AppColors.c_29BB89,
         onPressed: () {  },
-        child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Icon(Icons.add),),
+        child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Text("All"),),
       ),
       backgroundColor: AppColors.c_F9F9F9,
-      body:context.read<BookViewModel>().isLoading?
+      body:context.watch<BookViewModel>().isLoading?
       const Center(child: CircularProgressIndicator(),)
           :
       Column(
@@ -56,6 +59,10 @@ class AllBooksScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w()),
             child: TextField(
+              onChanged: (value) {
+                context.watch<BookViewModel>().searchBooks(value);
+
+              },
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 fillColor: Colors.transparent,
@@ -68,7 +75,7 @@ class AllBooksScreen extends StatelessWidget {
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                hintText: "Qidrish",
+                hintText: "Qidirish",
                 hintStyle: const TextStyle(color: Colors.black, fontSize: 14),
                 enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: AppColors.black),
@@ -89,7 +96,7 @@ class AllBooksScreen extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Kitob Turlari",
+            child: Text("Kitob turlari",
                 style:
                     AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
           ),
@@ -139,9 +146,9 @@ class AllBooksScreen extends StatelessWidget {
                   childAspectRatio: 0.6,
                   children: [
                     ...List.generate(
-                        context.watch<BookViewModel>().allBooks.length,
+                        filteredBooks.length,
                         (index){
-                          BookModel books=context.watch<BookViewModel>().allBooks[index];
+                          BookModel books=filteredBooks[index];
                           return
                                     InkWell(
                                         borderRadius:
