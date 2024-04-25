@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:library_app/data/models/book_model.dart';
 import 'package:library_app/data/repositories/book_repo.dart';
-import 'package:library_app/screens/books/update_book_screen.dart';
 import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/utils/styles/app_text_style.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:library_app/view_models/book_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors/app_colors.dart';
 import '../../utils/images/app_images.dart';
@@ -203,7 +201,6 @@ class _BookInfoState extends State<BookInfo> {
                                 ),
                                 TextButton(
                                   onPressed: () async {
-                                    context.read<BookViewModel>().deleteBook(widget.bookModel.uuid);
                                     Navigator.pop(context);
                                     Navigator.pop(context);
                                   },
@@ -238,7 +235,6 @@ class _BookInfoState extends State<BookInfo> {
                 Spacer(),
                 InkWell(
                   onTap: (){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UpdateBookScreen(bookModel: widget.bookModel)));
 
                   },
                   borderRadius:BorderRadius.circular(20.w()),

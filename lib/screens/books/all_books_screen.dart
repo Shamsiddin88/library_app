@@ -1,39 +1,45 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:library_app/bloc/file_manager_bloc.dart';
+import 'package:library_app/data/models/files/file_data_model.dart';
 import 'package:library_app/data/repositories/category_repo.dart';
-import 'package:library_app/screens/book_info/book_info_screen.dart';
-import 'package:library_app/screens/books/widgets/book_widget.dart';
+import 'package:library_app/data/repositories/file_repository.dart';
 import 'package:library_app/screens/books/widgets/wrap_item.dart';
-import 'package:library_app/screens/categories/categories_screen.dart';
 import 'package:library_app/utils/project_extensions.dart';
 import 'package:library_app/utils/styles/app_text_style.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../utils/colors/app_colors.dart';
 import 'package:library_app/data/models/book_model.dart';
-import 'package:library_app/screens/books/add_book_screen.dart';
-import 'package:library_app/view_models/book_view_model.dart';
-import 'package:provider/provider.dart';
 
 
-class AllBooksScreen extends StatelessWidget {
+class AllBooksScreen extends StatefulWidget {
   const AllBooksScreen({super.key});
+
+  @override
+  State<AllBooksScreen> createState() => _AllBooksScreenState();
+}
+
+class _AllBooksScreenState extends State<AllBooksScreen> {
+  FocusNode focus = FocusNode();
+
+  String text = "";
+
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    final bookViewModel = context.watch<BookViewModel>();
-    final allBooks = bookViewModel.allBooks;
-    List<BookModel> filteredBooks = allBooks;
+    List<FileDataModel> users = context.read<FileRepository>().files
+        .where((element) =>
+        element.bookName.toLowerCase().contains(text.toLowerCase()))
+        .toList();
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          backgroundColor:  AppColors.c_29BB89,
-        onPressed: () {  },
-        child: IconButton(onPressed: (){context.read<BookViewModel>().getAllBooks();},icon: Text("All"),),
-      ),
       backgroundColor: AppColors.c_F9F9F9,
-      body:context.watch<BookViewModel>().isLoading?
-      const Center(child: CircularProgressIndicator(),)
-          :
+      body:
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,96 +47,98 @@ class AllBooksScreen extends StatelessWidget {
             height: 30,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.h(), horizontal: 18.w()),
-            child: Text(
-              "Hush kelibsiz",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-          ),
-          Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Kitoblar olamiga",
+            child: Text("Kitoblar",
                 style:
-                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+                AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.w()),
-            child: TextField(
-              onChanged: (value) {
-                context.watch<BookViewModel>().searchBooks(value);
-
-              },
-              decoration: InputDecoration(
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                fillColor: Colors.transparent,
-                prefixIcon: const Padding(
-                  padding: EdgeInsets.all(7.0),
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.green,
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      top: 14,
+                      left: 24,
+                      bottom: 8,
+                      right: focus.hasFocus ? 5 : 24),
+                  child: CupertinoTextField(
+                    controller: controller,
+                    onChanged: (v) {
+                      text = v;
+                      setState(() {});
+                    },
+                    prefix: Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.black.withOpacity(.4),
+                      ),
+                    ),
+                    onTap: () {
+                      focus.requestFocus();
+                      setState(() {});
+                    },
+                    cursorColor: Colors.blue,
+                    focusNode: focus,
+                    clearButtonMode: OverlayVisibilityMode.editing,
+                    placeholder: " Search",
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: AppColors.c_29BB89.withOpacity(0.2)),
                   ),
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                hintText: "Qidirish",
-                hintStyle: const TextStyle(color: Colors.black, fontSize: 14),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: AppColors.black),
-                    borderRadius: BorderRadius.circular(12)),
-                disabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.black.withOpacity(.6)),
-                    borderRadius: BorderRadius.circular(12)),
-                focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.black.withOpacity(.6)),
-                    borderRadius: BorderRadius.circular(12)),
               ),
-            ),
+              focus.hasFocus
+                  ? CupertinoTextSelectionToolbarButton(
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: AppColors.c_29BB89),
+                ),
+                onPressed: () {
+                  text = "";
+                  controller.text = "";
+                  setState(() {});
+                  focus.unfocus();
+                },
+              )
+                  : const SizedBox(),
+            ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Text("Kitob turlari",
-                style:
-                    AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.h()),
-            child: Wrap(
-              spacing: 11,
-              children: <Widget>[
-                ...List.generate(
-                    categories.length,
-                    (index) => WrapItem(
-                          title: categories[index],
-                          onTap: () {
-                            category: context.read<BookViewModel>().getBooksByCategoryId(index+1);
-                          },
-                        )),
-              ],
-            ),
-          ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
+          //   child: Text("Kitob turlari",
+          //       style:
+          //       AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 25.h()),
+          //   child: Wrap(
+          //     spacing: 11,
+          //     children: <Widget>[
+          //       ...List.generate(
+          //           categories.length,
+          //               (index) => WrapItem(
+          //             title: categories[index],
+          //             onTap: () {
+          //             },
+          //           )),
+          //     ],
+          //   ),
+          // ),
           SizedBox(
             height: 5.h(),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25.w(), vertical: 5.h()),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Hamma Kitoblar",
-                    style:
-                        AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
-                TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddBookScreen()));}, child: Text("+ Kitob qo'shish", style: AppTextStyle.rubikBold.copyWith(color: AppColors.c_29BB89),))
-              ],
-            ),
+            child: Text("Hamma Kitoblar",
+                style:
+                AppTextStyle.rubikSemiBold.copyWith(color: Colors.black)),
           ),
+
+
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -143,30 +151,97 @@ class AllBooksScreen extends StatelessWidget {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 15,
                   crossAxisCount: 2,
-                  childAspectRatio: 0.6,
+                  childAspectRatio: 0.5,
                   children: [
                     ...List.generate(
-                        filteredBooks.length,
-                        (index){
-                          BookModel books=filteredBooks[index];
+                        users.length,
+                            (index){
+                              FileDataModel fileDataModel = users[index];
+                              FileManagerBloc fileManagerBloc = FileManagerBloc();
                           return
+                            BlocProvider.value(
+                              value: fileManagerBloc,
+                              child: BlocBuilder<FileManagerBloc, FileManagerState>(
+                                builder: (context, state) {
+                                  debugPrint("CURRENT MB: ${state.progress}");
+                                  return
                                     InkWell(
                                         borderRadius:
-                                            BorderRadius.circular(20.w()),
+                                        BorderRadius.circular(20.w()),
                                         onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return BookInfo(bookModel: books,);
-                                          }));
+                                          // Navigator.push(context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (context) {
+                                          //           return BookInfo(bookModel: books,);
+                                          //         }));
                                         },
-                                        child: BookItem(
-                                          image: books.imageUrl,
-                                          price: books.price.toString(),
-                                          bookName: books.bookName,
-                                          author: books.author,
-                                        ));
-                                  })
+                                        child:  InkWell(
+                                          borderRadius: BorderRadius.circular(15),
+                                          onTap: (){},
+                                          child: Container(
+                                              margin: EdgeInsets.symmetric(vertical: 8.h()),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 12.w(), vertical: 13.h()),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.c_29BB89.withOpacity(0.5),
+                                                borderRadius: BorderRadius.circular(15.w()),
+                                              ),
+                                              child:  Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 40,
+                                                    child: Text(textAlign: TextAlign.center,
+                                                      fileDataModel.author,
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  10.getH(),
+                                                  Image.asset(fileDataModel.imagePath, height: 160.h(),),
+                                                  10.getH(),
+                                                  Row(
+                                                    children: [
+                                                      Visibility(
+                                                        visible: state.progress != 0,
+                                                        child: LinearProgressIndicator(
+                                                          value: state.progress,
+                                                          backgroundColor: Colors.grey,
+                                                        ),
+                                                      ),
+
+                                                      Spacer(),
+                                                      IconButton(
+                                                        onPressed: () async {
+                                                          if (state.newFileLocation.isEmpty) {
+                                                            fileManagerBloc.add(
+                                                              DownloadFileEvent(
+                                                                fileDataModel: fileDataModel,
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            await OpenFilex.open(state.newFileLocation);
+                                                          }
+                                                        },
+                                                        icon: Icon(
+                                                          state.newFileLocation.isEmpty
+                                                              ? Icons.download
+                                                              : Icons.check,
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ),
+
+                                                    ],
+                                                  ),
+
+
+                                                ],
+                                              )),
+                                        )
+                                    );
+                                },
+                              ),
+                            );
+
+                        })
                   ],
                 ),
               ),
@@ -174,11 +249,10 @@ class AllBooksScreen extends StatelessWidget {
           )
         ],
       ),
+
     );
 
   }
 }
-
-
 
 

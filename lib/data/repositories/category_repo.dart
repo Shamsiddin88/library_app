@@ -1,7 +1,7 @@
 
   List<String> categories = [
     "Siyosiy",
-    "Fantastika",
+    "Xorijiy",
     "Fan",
     "Biografiya",
     "Diniy",

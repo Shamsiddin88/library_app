@@ -7,7 +7,8 @@ class WrapItem extends StatelessWidget {
    final VoidCallback  onTap;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return
+      InkWell(
       borderRadius: BorderRadius.circular(15),
       onTap: onTap,
       child: Container(
